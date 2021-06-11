@@ -22,7 +22,6 @@ const Login = (props) => {
                 <FormFeedback tooltip>Oh noes! that name is already user id</FormFeedback>
               </Col>
             </FormGroup>
-            <br/>
             <FormGroup row className="position-relative">
               <Label for="password" sm={3} size="lg">password</Label>
               <Col sm={9}>
