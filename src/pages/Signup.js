@@ -19,19 +19,27 @@ const Signup = () => {
     const [rePasswordError,setRepasswordError] = useState(false);
     const [phoneNumberError,setPhnonNumberError] = useState(false);
     const [emailError,setEmailError] = useState(false);
-
-
+/*
+    const [data, setData] = useState({
+        nameError: false,
+        idError: false,
+        passwordError: false,
+        rePasswordError: false,
+        phoneNumberError: false,
+        emailError: false
+    });
+    */
     const onSubmit = (e) => {
         console.log("========onsubmit=========");
         e.preventDefault();
-
+    
         setNameError(false);
         setIdError(false);
         setPasswordError(false);
         setRepasswordError(false);
         setPhnonNumberError(false);
         setEmailError(false);
-        
+
         if(userName === "" ){
             return setNameError(true);
         }
