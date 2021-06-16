@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {  FormFeedback ,Col, Button, Form, FormGroup, Label, Input,FormText } from 'reactstrap';
+import axios from 'axios';
 
 const Signup = () => {
 
@@ -10,6 +11,11 @@ const Signup = () => {
     const [phoneNumber,setPhoneNumber] = useState('');
     const [userEmail,setUserEmail] = useState('');
     const [term,setTerm] = useState(false);
+
+    const [message,setMessage] = useState('');
+    const [idsSuccess,setIdsSuccess] = useState(false);
+    
+    
    
     const [termError,setTermError] = useState(false);
 
@@ -44,6 +50,7 @@ const Signup = () => {
             return setNameError(true);
         }
         if(userId === "" ){
+            setMessage("아이디를 입력해 주세요.")
             return setIdError(true);
         }
         if(userPassword === "" ){
@@ -100,9 +107,36 @@ const Signup = () => {
         //체크박스 초기화
         setTermError(false);
         setTerm(e.target.checked);
-    }
-    
-           
+    };
+    const onUseridCheck = (e) => {
+        //아이디체크
+        console.log("========onUseridCheck=========>>"+userId);
+        if(userId === "" ){
+            setMessage("아이디를 입력해 주세요.")
+            return setIdError(true);
+        }
+        e.preventDefault();
+        axios.get("http://localhost:8080/api/userIdCheck", {
+            params: {userId:userId}
+        }).then((response) => {
+            if(!response.data.success){
+                setIdError(true);
+                return setIdsSuccess(false);
+            }else{
+                setIdError(false);
+                setIdsSuccess(true);
+            }
+           setMessage(response.data.message)
+           console.log(response.data)
+       }).catch((error) => {
+           // 오류발생시 실행
+           console.log("----error----") 
+           console.log(error)
+       }).then(()  =>{
+           // 항상 실행
+       });
+    };
+     
 
     return (
         <div >
@@ -116,9 +150,13 @@ const Signup = () => {
                 </FormGroup>
                 <FormGroup row className="position-relative">
                     <Label for="userId" sm={3}>id</Label>
-                    <Col sm={9}>
-                        <Input type="text" name="userId" id="userId" placeholder="아이디" onChange={onChangeUserId} invalid={idError} />
-                        <FormFeedback tooltip>아이디를 입력해 주세요.</FormFeedback>
+                    <Col sm={6}>
+                        <Input type="text" name="userId" id="userId" placeholder="아이디" onChange={onChangeUserId} invalid={idError} valid={idsSuccess} />
+                        <FormFeedback tooltip>{message}</FormFeedback>
+                        <FormFeedback valid tooltip>{message}</FormFeedback>
+                    </Col>
+                    <Col sm={3}>
+                        <Button color="info" size="sm" onClick={onUseridCheck}>중복확인</Button>
                     </Col>
                 </FormGroup>
                 <FormGroup row className="position-relative">
