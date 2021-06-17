@@ -116,9 +116,10 @@ const Signup = () => {
             return setIdError(true);
         }
         e.preventDefault();
-        axios.get("http://localhost:8080/api/userIdCheck", {
+        axios.get("http://61.79.173.31:8080/api/userIdCheck", {
             params: {userId:userId}
         }).then((response) => {
+            setMessage(response.data.message)
             if(!response.data.success){
                 setIdError(true);
                 return setIdsSuccess(false);
@@ -126,7 +127,7 @@ const Signup = () => {
                 setIdError(false);
                 setIdsSuccess(true);
             }
-           setMessage(response.data.message)
+         
            console.log(response.data)
        }).catch((error) => {
            // 오류발생시 실행
