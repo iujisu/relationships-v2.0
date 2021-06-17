@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {  FormFeedback ,Col, Button, Form, FormGroup, Label, Input,FormText } from 'reactstrap';
 import axios from 'axios';
 
-const Signup = () => {
+const Signup = (props) => {
 
     const [userName,seUserName] = useState('');
     const [userId,setUserId] = useState('');
@@ -25,6 +25,7 @@ const Signup = () => {
     const [rePasswordError,setRepasswordError] = useState(false);
     const [phoneNumberError,setPhnonNumberError] = useState(false);
     const [emailError,setEmailError] = useState(false);
+    const [file,setFile] = useState(null);
 /*
     const [data, setData] = useState({
         nameError: false,
@@ -36,7 +37,7 @@ const Signup = () => {
     });
     */
     const onSubmit = (e) => {
-        console.log("========onsubmit=========");
+
         e.preventDefault();
     
         setNameError(false);
@@ -62,7 +63,10 @@ const Signup = () => {
         if(phoneNumber === "" ){
             return setPhnonNumberError(true);
         }
-        if(userEmail !== rePassword){
+        if(userPassword !== rePassword){
+            return setRepasswordError(true);
+        }
+        if(userEmail === "rePassword"){
             return setEmailError(true);
         }
         if(!term){
@@ -77,7 +81,41 @@ const Signup = () => {
             termError,
             term
         });
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('userName', userName);
+        formData.append('userId', userId);
+        formData.append('userPassword', userPassword);
+        formData.append('phoneNumber', phoneNumber);
+        formData.append('userEmail', userEmail);
+        const config = {
+          headers: {
+            'Accept': 'application/json, application/*+json',
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        console.log("========onsubmit=start========");
+        axios.post('http://localhost:8080/api/memberJoin', formData, config).then((response) => {
+            console.log("======response=====");
+            console.log(response.data);
+            if (response.data.success === true) {
+                alert(response.data.message)
+            }else{
+               alert(response.data.message)
+            }
+          }).catch((error) => {
+            console.log(error);
+            alert('error 가입된 아이디입니다.');
+            props.history.push("/login");
+        });
+        console.log("========onsubmit=start========");
     };
+    
+    const handleFileChange= (e) => {
+        e.preventDefault();
+        setFile(e.target.files[0])
+        console.log("==fileName====>>"+e.target.value);
+    }
     const onChangeUserName = (e) => {
         setNameError(false);
         seUserName(e.target.value);
@@ -110,13 +148,13 @@ const Signup = () => {
     };
     const onUseridCheck = (e) => {
         //아이디체크
+        e.preventDefault();
         console.log("========onUseridCheck=========>>"+userId);
         if(userId === "" ){
             setMessage("아이디를 입력해 주세요.")
             return setIdError(true);
         }
-        e.preventDefault();
-        axios.get("http://61.79.173.31:8080/api/userIdCheck", {
+        axios.get("http://localhost:8080/api/userIdCheck", {
             params: {userId:userId}
         }).then((response) => {
             setMessage(response.data.message)
@@ -126,9 +164,7 @@ const Signup = () => {
             }else{
                 setIdError(false);
                 setIdsSuccess(true);
-            }
-         
-           console.log(response.data)
+            }console.log(response.data)
        }).catch((error) => {
            // 오류발생시 실행
            console.log("----error----") 
@@ -170,7 +206,7 @@ const Signup = () => {
                 <FormGroup row className="position-relative">
                     <Label for="rePassword" sm={3}>rePassword</Label>
                     <Col sm={9}>
-                        <Input type="text" name="rePassword" id="rePassword" placeholder="재확인 비밀번호" onChange={onChangerePassword} invalid={rePasswordError}/>
+                        <Input type="password" name="rePassword" id="rePassword" placeholder="재확인 비밀번호" onChange={onChangerePassword} invalid={rePasswordError}/>
                         <FormFeedback tooltip>비밀번호를 확인해 주세요.</FormFeedback>
                     </Col>
                 </FormGroup>
@@ -191,7 +227,7 @@ const Signup = () => {
                 <FormGroup row className="position-relative">
                     <Label for="exampleFile" sm={3}>증명 이미지</Label>
                     <Col sm={9}>
-                        <Input type="file" name="file" id="userImageFile" />
+                        <Input type="file" name="file" id="userImageFile"  onChange={handleFileChange} />
                     <br/>
                     <FormText color="muted">1024M 미만의 얼굴 이미지 </FormText>
                     </Col>
