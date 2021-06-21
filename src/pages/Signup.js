@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {  FormFeedback ,Col, Button, Form, FormGroup, Label, Input,FormText } from 'reactstrap';
+import { FormFeedback ,Col, Button, Form, FormGroup, Label, Input,FormText } from 'reactstrap';
 import axios from 'axios';
+import swal from 'sweetalert';
 
 const Signup = (props) => {
 
@@ -39,7 +40,7 @@ const Signup = (props) => {
     const onSubmit = (e) => {
 
         e.preventDefault();
-    
+
         setNameError(false);
         setIdError(false);
         setPasswordError(false);
@@ -47,28 +48,15 @@ const Signup = (props) => {
         setPhnonNumberError(false);
         setEmailError(false);
 
-        if(userName === "" ){
-            return setNameError(true);
-        }
-        if(userId === "" ){
-            setMessage("아이디를 입력해 주세요.")
+        if(userName === "" ){ return setNameError(true); }
+        if(userId === "" ){setMessage("아이디를 입력해 주세요.");
             return setIdError(true);
         }
-        if(userPassword === "" ){
-            return setPasswordError(true);
-        }
-        if(rePassword === "" ){
-            return setRepasswordError(true);
-        }
-        if(phoneNumber === "" ){
-            return setPhnonNumberError(true);
-        }
-        if(userPassword !== rePassword){
-            return setRepasswordError(true);
-        }
-        if(userEmail === "rePassword"){
-            return setEmailError(true);
-        }
+        if(userPassword === "" ){ return setPasswordError(true);}
+        if(rePassword === "" ){return setRepasswordError(true);}
+        if(phoneNumber === "" ){return setPhnonNumberError(true);}
+        if(userPassword !== rePassword){return setRepasswordError(true);}
+        if(userEmail === "rePassword"){return setEmailError(true);}
         if(!term){
             return setTermError(true);
         }
@@ -99,18 +87,24 @@ const Signup = (props) => {
             console.log("======response=====");
             console.log(response.data);
             if (response.data.success === true) {
-                alert(response.data.message)
+                swal({
+                    title: "Good job!",
+                    text: response.data.message,
+                    icon: "success",
+                    button: "로그인",
+                }).then((value) => {
+                    props.history.push("/login");
+                });
             }else{
-               alert(response.data.message)
+               swal("ERROR!", response.data.message, "error");
             }
           }).catch((error) => {
-            console.log(error);
-            alert('error 가입된 아이디입니다.');
-            props.history.push("/login");
+            swal("ERROR!", error, "error");
         });
-        console.log("========onsubmit=start========");
+
     };
-    
+
+
     const handleFileChange= (e) => {
         e.preventDefault();
         setFile(e.target.files[0])
@@ -149,7 +143,7 @@ const Signup = (props) => {
     const onUseridCheck = (e) => {
         //아이디체크
         e.preventDefault();
-        console.log("========onUseridCheck=========>>"+userId);
+        
         if(userId === "" ){
             setMessage("아이디를 입력해 주세요.")
             return setIdError(true);
@@ -164,13 +158,15 @@ const Signup = (props) => {
             }else{
                 setIdError(false);
                 setIdsSuccess(true);
-            }console.log(response.data)
+            }
+            console.log(response.data)
        }).catch((error) => {
            // 오류발생시 실행
-           console.log("----error----") 
-           console.log(error)
+           swal("ERROR!", error, "error");
        }).then(()  =>{
-           // 항상 실행
+            setTimeout(() => {
+                setIdsSuccess(false);
+           }, 2000);
        });
     };
      
