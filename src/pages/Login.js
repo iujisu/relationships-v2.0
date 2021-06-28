@@ -3,7 +3,6 @@ import '../css/Login.css';
 import axios from 'axios';
 import { Alert,FormFeedback ,Col,Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import imgError from '../images/error.png';
-
 const styles = {
     Bottons:{
       width:"100%",
@@ -60,7 +59,7 @@ const Login = (props) => {
 };
 
     return (
-        <div>
+        <div className="app-login">
           <Form onSubmit={handleSubmit} >
             <FormGroup row className="position-relative">
               <Label for="userName" sm={4} size="lg">아이디</Label>

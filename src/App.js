@@ -11,8 +11,6 @@ const styles = {
   Body:{
     display:"flex",
     justifyContent: "center",
-    paddingTop:"20px"
-    
   }
 }
 const App = () => {
