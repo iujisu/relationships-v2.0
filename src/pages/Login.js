@@ -78,7 +78,7 @@ const Login = (props) => {
             <Alert color="danger" isOpen={visible}>
               <img src={ imgError} className="error-icon" alt="error"/>{' '}  자격 증명에 실패하였습니다.
             </Alert>
-            <div check row style={styles.BottonsGroup} >
+            <div check="true" style={styles.BottonsGroup} >
               <Button color="primary" style={styles.Bottons}  size="lg" block>로그인</Button>
             </div>
           </Form>

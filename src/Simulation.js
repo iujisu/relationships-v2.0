@@ -4,22 +4,22 @@ import datas from "./testData";
 
 const Simulation = () => {
 
-  const myRef = useRef();
-  const svg = d3.select(myRef.current)
-      .attr("width", "100%")
-      .attr("height", "800")
-   //   .style("border", "1px solid black")
-  
+   const myRef = useRef();
 
     useEffect(() => { //클래스가 마운트 되려할 때
+      
+    const svg = d3.select(myRef.current)
+      .attr("width", "100%")
+      .attr("height", "800")
+      //   .style("border", "1px solid black")
       const color = d3.scaleOrdinal(d3.schemeAccent);
+      console.log('=Simulation Start!===');
       const ticked = () => {
           link
           .attr("x1", function(d) { return d.source.x; })
           .attr("y1", function(d) { return d.source.y; })
           .attr("x2", function(d) { return d.target.x; })
           .attr("y2", function(d) { return d.target.y; });
-
           node
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; });
@@ -44,7 +44,8 @@ const Simulation = () => {
       .force("link", d3.forceLink().id(function(d) { return d.id; }))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(1000 / 2, 800 / 2));
-
+      console.log('datas.links=>>>',datas.links);
+      
       const link = svg.append("g")
         .attr("class", "links")
         .selectAll("line")
@@ -67,14 +68,15 @@ const Simulation = () => {
 
       node.append("title")
         .text(function(d) { return d.id; });
-
+        console.log('datas.nodes=>>>',datas.nodes);
+        
       simulation
         .nodes(datas.nodes)
         .on("tick", ticked);
 
       simulation.force("link")
         .links(datas.links);
-    });
+    },[]);
 
     return (
       <div>

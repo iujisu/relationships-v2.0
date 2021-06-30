@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useEffect} from 'react';
 import axios from 'axios';
 import Body from '../layout/Body';
 import Left from '../layout/Left';
@@ -10,10 +10,8 @@ const styles = {
     }
   }
 const MyRelationships = () => {
-    const [accessToken, setSccessToken] = useState('');
-  
     useEffect(() => {
-        setSccessToken(localStorage.getItem('accessToken'));
+        const accessToken=localStorage.getItem('accessToken');
         console.log('렌더링이 완료되었습니다!');
         console.log(accessToken);
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
@@ -25,7 +23,9 @@ const MyRelationships = () => {
         .catch((error) => {
         console.error(error)
         }) 
-    });
+    },[]);
+
+    
     return (
         <div className="BodyLeyout" style={styles.Body}>
             <Left/>
